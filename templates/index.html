@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Empathy Engine</title>
+    <style>
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        margin: 0;
+        padding: 2.5rem;
+        background: #0f172a;
+        color: #e2e8f0;
+      }
+      main {
+        max-width: 920px;
+        margin: 0 auto;
+        display: grid;
+        gap: 2rem;
+      }
+      h1 {
+        margin-bottom: 0.5rem;
+        font-size: 2.5rem;
+      }
+      p.lead {
+        margin-top: 0;
+        color: #94a3b8;
+      }
+      form {
+        display: grid;
+        gap: 1rem;
+        background: #1e293b;
+        padding: 1.5rem;
+        border-radius: 1rem;
+      }
+      textarea {
+        min-height: 160px;
+        resize: vertical;
+        border-radius: 0.75rem;
+        border: 1px solid #334155;
+        padding: 1rem;
+        font-size: 1rem;
+        background: #0f172a;
+        color: inherit;
+      }
+      textarea:focus {
+        outline: 2px solid #38bdf8;
+        outline-offset: 3px;
+      }
+      button {
+        justify-self: flex-start;
+        padding: 0.75rem 1.5rem;
+        border-radius: 999px;
+        border: none;
+        background: linear-gradient(135deg, #38bdf8, #6366f1);
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:hover {
+        filter: brightness(1.05);
+      }
+      section.card {
+        background: #1e293b;
+        padding: 1.75rem;
+        border-radius: 1rem;
+        display: grid;
+        gap: 1rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border-bottom: 1px solid #334155;
+        padding: 0.75rem 0.5rem;
+        text-align: left;
+      }
+      th {
+        color: #94a3b8;
+        font-weight: 500;
+      }
+      audio {
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.35rem 0.9rem;
+        border-radius: 999px;
+        background: rgba(56, 189, 248, 0.15);
+        color: #38bdf8;
+        font-weight: 600;
+        text-transform: capitalize;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>The Empathy Engine</h1>
+        <p class="lead">Transform plain text into expressive, emotionally aware speech.</p>
+      </header>
+
+      <form action="/synthesize" method="post">
+        <label for="text">What should the Empathy Engine say?</label>
+        <textarea id="text" name="text" placeholder="Share the message you'd like the assistant to deliver" required>{{ input_text or '' }}</textarea>
+        <button type="submit">Synthesize Voice</button>
+      </form>
+
+      {% if emotion %}
+      <section class="card">
+        <div>
+          <span class="pill">{{ emotion.label }} · {{ '%.0f' | format(emotion.intensity * 100) }}% intensity</span>
+        </div>
+        <div>
+          <h2>Emotion Confidence</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Emotion</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for label, score in canonical_scores %}
+              <tr>
+                <td>{{ label }}</td>
+                <td>{{ '%.1f' | format(score * 100) }}%</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h2>Voice Profile</h2>
+          <ul>
+            <li>Voice: {{ voice_profile.voice }}</li>
+            <li>Rate: {{ voice_profile.rate }}</li>
+            <li>Pitch: {{ voice_profile.pitch }}</li>
+            <li>Volume: {{ voice_profile.volume }}</li>
+            {% if voice_profile.style %}
+            <li>Style hint: {{ voice_profile.style }}</li>
+            {% endif %}
+          </ul>
+        </div>
+        {% if audio_url %}
+        <div>
+          <h2>Preview</h2>
+          <audio controls>
+            <source src="{{ audio_url }}" type="audio/mpeg" />
+            Your browser does not support the audio element.
+          </audio>
+          <p>
+            <a href="{{ audio_url }}" download>Download the audio</a>
+          </p>
+        </div>
+        {% endif %}
+      </section>
+      {% endif %}
+    </main>
+  </body>
+</html>
