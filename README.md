@@ -31,6 +31,11 @@ pip install -r requirements.txt
 ```bash
 uvicorn app.main:app --reload
 ```
+## if the above command doesnt work ,try
+```bash
+uvicorn app.main:app --reload --reload-dir app --reload-dir templates
+```
+
 
 Navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000) to open the Empathy Engine UI.
 
