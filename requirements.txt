@@ -5,3 +5,5 @@ torch
 edge-tts
 jinja2
 python-multipart
+safetensors
+
